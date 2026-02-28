@@ -3,11 +3,12 @@
 document.querySelector('button').addEventListener('click', getDrink)
 
 function getDrink () {
-    let drink = document.querySelector('input').value
-    fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${drink}`)
+    let drink = formatDrink(document.querySelector('input').value)
+
+    fetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=' + drink.join(' '))
     .then(res => res.json()) // parse response as JSON
     .then(data => {
-      console.log(data.drinks[0])
+      console.log(data.drinks)
       let item = data.drinks[0]
       document.querySelector('h2').innerText = `\n${item.strDrink}`
       document.querySelector('img').src = `${item.strDrinkThumb}`
@@ -16,4 +17,8 @@ function getDrink () {
     .catch(err => {
         console.log(`error ${err}`)
     });
+}
+
+function formatDrink (str) {
+    return newStr = str.split(' ').filter(word => word !== '')
 }
