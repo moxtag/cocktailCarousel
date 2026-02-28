@@ -5,6 +5,7 @@ document.querySelector('button').addEventListener('click', getDrink)
 function getDrink () {
 
     let drink = formatDrink(document.querySelector('input').value)
+    console.log(drink)
 
     fetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=' + drink)
     .then(res => res.json()) // parse response as JSON
@@ -21,5 +22,5 @@ function getDrink () {
 }
 
 function formatDrink (str) {
-    return str.split(' ').filter(word => word !== '').join(' ')
+    return str.split(' ').filter(word => word).join(' ')
 }
