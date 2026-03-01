@@ -5,6 +5,8 @@ document.querySelector('button').addEventListener('click', getDrink)
 function getDrink () {
 
     let drink = formatDrink(document.querySelector('input').value)
+    let list = document.querySelector('ul')
+    list.innerText = ''
 
     fetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=' + drink)
     .then(res => res.json()) // parse response as JSON
@@ -19,7 +21,13 @@ function getDrink () {
       document.querySelector('img').src = `${item.strDrinkThumb}`
       document.querySelector('h3').innerText = `\n${item.strInstructions}`
 
-      // TO DO - INSERT INGREDIENTS AND INGREDIENTS AS WELL
+      let ingredients = getIngredients(item)
+
+      ingredients.forEach(item => {
+        let insert = document.createElement('li')
+        list.append(insert)
+        insert.innerText = item
+      })
  
     })
     .catch(err => {
@@ -27,6 +35,26 @@ function getDrink () {
     });
 }
 
+// get rid of extra spaces in drink name
 function formatDrink (str) {
     return str.split(' ').filter(word => word).join(' ')
+}
+
+// make array of ingredients and their measures
+function getIngredients (obj) {
+    const list = filterOutNull(obj, 'strIngredient')
+    const amount = filterOutNull(obj, 'strMeasure')
+
+    return list.reduce((items, curr, index) => {
+        amount[index] ? amount[index] += `${curr}` : amount.push(`${curr}`)
+        return amount
+    }, amount)
+}
+
+// return an array of properties with values with a given property name
+function filterOutNull (obj, term) {
+    return Object.keys(obj).filter(prop => 
+        prop.startsWith(term) &&
+        obj[prop] !== null)
+        .map(key => obj[key])
 }
