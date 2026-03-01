@@ -45,10 +45,10 @@ function getIngredients (obj) {
     const list = filterOutNull(obj, 'strIngredient')
     const amount = filterOutNull(obj, 'strMeasure')
 
-    return list.reduce((items, curr, index) => {
-        amount[index] ? amount[index] += `${curr}` : amount.push(`${curr}`)
-        return amount
-    }, amount)
+    return amount.reduce((items, curr, index) => {
+        items[index] = `${curr}${items[index]}`
+        return items
+    }, list)
 }
 
 // return an array of properties with values with a given property name
